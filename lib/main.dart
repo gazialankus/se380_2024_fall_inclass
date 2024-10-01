@@ -109,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
               'You have pressed this many times',
             ),
             Text(
-              '$_counter',
+              '$_counter is the current number',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
