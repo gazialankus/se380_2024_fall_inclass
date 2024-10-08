@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 
 void main() {
+  int i = 10;
+
+  runAForLoop(i);
+
   print("hello world");
   runApp(new MyApp());
+}
+
+void runAForLoop(int i) {
+  for (int j = 0; j < 5; ++j) {
+    print(i);
+    print(j);
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -46,6 +57,8 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
+    print('increment counter was pressed!!!');
+
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
