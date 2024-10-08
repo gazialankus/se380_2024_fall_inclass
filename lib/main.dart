@@ -39,18 +39,20 @@ class MyHomePage extends StatefulWidget {
 
   final String title;
 
+  int _counter = 0;
+
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
   void _incrementCounter() {
     print('increment counter was pressed!!!');
 
     setState(() {
-      _counter++;
+      widget._counter++;
     });
     // _counter++;
 
@@ -72,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
               'You have pressed this many times',
             ),
             new Text(
-              '$_counter is the current number!!!!!!',
+              '${widget._counter} is the current number!!!!!!',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
