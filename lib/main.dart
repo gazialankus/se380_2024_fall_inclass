@@ -70,9 +70,8 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            new Text(
-              'You have pressed this many times',
-            ),
+            if (widget._counter % 5 != 0) TitlePart('first ${widget._counter}'),
+            if (widget._counter % 5 != 0) TitlePart('second ${widget._counter}'),
             new Text(
               '${widget._counter} is the current number!!!!!!',
               style: Theme.of(context).textTheme.headlineMedium,
@@ -84,6 +83,63 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: new Icon(Icons.accessible_outlined),
+      ),
+    );
+  }
+}
+
+class TitlePart extends StatefulWidget {
+  TitlePart(String s) : myS = s {
+    print(s);
+  }
+
+  String myS;
+
+
+  @override
+  State<TitlePart> createState() => _TitlePartState();
+}
+
+class _TitlePartState extends State<TitlePart> {
+  int counter = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    print('STATE IS CREATED ${widget.myS}');
+  }
+
+  @override
+  void didUpdateWidget(covariant TitlePart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.myS == widget.myS) return;
+    print('UPDATED. old: ${oldWidget.myS} new: ${widget.myS}');
+  }
+
+  @override
+  void dispose() {
+    print('DISPOSED');
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            setState(() {
+              counter++;
+            });
+          },
+          child: Text(
+            '${widget.myS} Try to increment, current value is: $counter',
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
+        ),
       ),
     );
   }
