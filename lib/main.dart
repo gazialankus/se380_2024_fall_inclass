@@ -68,19 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // MessageArea(data: 'You have pressed this many times: $_counter'),
-            Classroom(5),
-            // Text(
-            //   '$_counter is the current number',
-            //   style: Theme.of(context).textTheme.headlineMedium,
-            // ),
-          ],
-        ),
-      ),
+      body: Classroom(5),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
@@ -144,9 +132,19 @@ class _ClassroomState extends State<Classroom> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         for (var i = 0; i < students.length; ++i)
           PersonView(theStudent: students[i]),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              students.add(Person('new person ${students.length}'));
+            });
+          },
+          child: Text('Add new student'),
+        ),
       ],
     );
   }
