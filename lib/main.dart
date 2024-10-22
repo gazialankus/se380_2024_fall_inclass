@@ -129,16 +129,35 @@ class Classroom extends StatefulWidget {
 }
 
 class _ClassroomState extends State<Classroom> {
-  late int initialStudentCount;
+  late final int initialStudentCount;
+  final students = <Person>[];
 
   @override
   void initState() {
     super.initState();
     initialStudentCount = widget.desiredStudentCount;
+    for (int i = 0; i < initialStudentCount; ++i) {
+      students.add(Person('student $i'));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Text('initial count: $initialStudentCount', style: TextStyle(fontSize: 34),);
+
+    // return Text('initial count: $initialStudentCount $students', style: TextStyle(fontSize: 34),);
+    // int i = 10;
+    // if (students.length > i) {
+    //   final theStudent = students[i];
+    //   return Text(theStudent.name);
+    // } else {
+    //   return Text('no such student', style: TextStyle(fontSize: 34));
+    // }
+
+    final theStudent = students.elementAtOrNull(2);
+    if (theStudent != null) {
+      return Text(theStudent.name, style: TextStyle(fontSize: 34));
+    } else {
+      return Text('no such student!', style: TextStyle(fontSize: 34));
+    }
   }
 }
