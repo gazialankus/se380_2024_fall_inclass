@@ -1,17 +1,111 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
-void main() {
-  int i = 10;
+class Person {
+  // Person(int age) : age = age {
+  //   print('a');
+  // }
+  Person({required this.age}) : _numberOfSecrets = age ~/ 2 {
+    // print('a ' + age.toString() + ' is my age');
+    print('a ${age + 2} is my age');
+  }
 
-  runAForLoop(i);
+  Person.newBorn() : age = 0, _numberOfSecrets = 0;
+
+  factory Person.factory() {
+    return Person(age: 10);
+  }
+
+  int age;
+  int _numberOfSecrets;
+  int? numFriends;
+}
+
+String intToString(int i) {
+  return '$i';
+}
+
+void main() {
+  var p = Person(age: 1);
+  var baby = Person.newBorn();
+  var artificial = Person.factory();
+
+  Person? maybeP;
+
+  runHome(maybeP);
+
+  print(p.age);
+  print(p._numberOfSecrets);
+
+  var i = 10;
+  i += 1;
+
+  final j = i;
+
+  int k = 1 == 5 ? 6 : 7;
+
+  final l = [
+    if (i < j) 1,
+    for (var k = 0; k < 4; ++k) k * 2,
+    2,
+    3,
+  ];
+
+  // int? firstOrNull = l.firstOrNull;
+
+  int? firstOrNull = l.firstOrNull;
+
+  List<String> o = l.map((i) => '$i').toList();
+
+  final onlySmallerThan3 = l.where((i) => i < 3).toList();
+
+  // var jj = jsonDecode('{"a": 5, "b": 6}');
+  // Map<String, dynamic>
+
+  final m = {
+    if (i < j) 'a': 5,
+    'b': 6,
+  };
+
+  final s = {1, 2, 3};
+
+  print(m['a']); //5
+
+  print(l);
+  print(o);
+
+  runAForLoop(
+    5,
+    3,
+    myOtherVariable: 5,
+  );
+  runAnotherForLoop(5, 7);
 
   print("hello world");
   runApp(new MyApp());
 }
 
-void runAForLoop(int i) {
+void runHome(Person maybeP) {
+  if (maybeP != null) {
+    print(maybeP.age);
+    final p = maybeP;
+
+    print(p.numFriends);
+  } else {
+
+  }
+}
+
+void runAnotherForLoop(int v, [int v2 = 1]) {
   for (int j = 0; j < 5; ++j) {
-    print(i);
+    print(j);
+  }
+}
+
+void runAForLoop(int v, int v2, {int myVariable = 4, int myOtherVariable = 3}) {
+  for (int j = 0; j < 5; ++j) {
+    print(myVariable);
     print(j);
   }
 }
@@ -23,10 +117,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       title: 'Flutter Demo during class',
-      theme: new ThemeData(
-        colorScheme: new ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
       home: new MyHomePage(title: 'Flutter Demo Home Page'),
@@ -73,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
             if (widget._counter % 5 != 0) TitlePart('first ${widget._counter}'),
             if (widget._counter % 5 != 0) TitlePart('second ${widget._counter}'),
             new Text(
-              '${widget._counter} is the current number!!!!!!',
+              '${widget._counter} is the current number!',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
