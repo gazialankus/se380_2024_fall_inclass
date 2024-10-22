@@ -71,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: [
             // MessageArea(data: 'You have pressed this many times: $_counter'),
             Classroom(5),
             // Text(
@@ -143,21 +143,12 @@ class _ClassroomState extends State<Classroom> {
 
   @override
   Widget build(BuildContext context) {
-
-    // return Text('initial count: $initialStudentCount $students', style: TextStyle(fontSize: 34),);
-    // int i = 10;
-    // if (students.length > i) {
-    //   final theStudent = students[i];
-    //   return Text(theStudent.name);
-    // } else {
-    //   return Text('no such student', style: TextStyle(fontSize: 34));
-    // }
-
-    final theStudent = students.elementAtOrNull(2);
-    if (theStudent != null) {
-      return PersonView(theStudent: theStudent);
-    }
-    return Text('no such student!', style: TextStyle(fontSize: 34));
+    return Column(
+      children: [
+        for (var i = 0; i < students.length; ++i)
+          PersonView(theStudent: students[i]),
+      ],
+    );
   }
 }
 
@@ -169,7 +160,7 @@ class PersonView extends StatelessWidget {
 
   final Person theStudent;
 
-  
+
   @override
   Widget build(BuildContext context) {
     return Text(theStudent.name, style: TextStyle(fontSize: 34));
