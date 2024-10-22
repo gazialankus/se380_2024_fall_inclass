@@ -155,9 +155,23 @@ class _ClassroomState extends State<Classroom> {
 
     final theStudent = students.elementAtOrNull(2);
     if (theStudent != null) {
-      return Text(theStudent.name, style: TextStyle(fontSize: 34));
-    } else {
-      return Text('no such student!', style: TextStyle(fontSize: 34));
+      return PersonView(theStudent: theStudent);
     }
+    return Text('no such student!', style: TextStyle(fontSize: 34));
+  }
+}
+
+class PersonView extends StatelessWidget {
+  const PersonView({
+    super.key,
+    required this.theStudent,
+  });
+
+  final Person theStudent;
+
+  
+  @override
+  Widget build(BuildContext context) {
+    return Text(theStudent.name, style: TextStyle(fontSize: 34));
   }
 }
