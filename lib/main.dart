@@ -144,16 +144,11 @@ class _ClassroomState extends State<Classroom> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: students
-          .map((e) => Person(e.name.toUpperCase()))
-          .map((e) => PersonView(theStudent: e)).toList(),
+      children: [
+        for (var i = 0; i < students.length; ++i)
+          PersonView(theStudent: students[i]),
+      ],
     );
-    // return Column(
-    //   children: [
-    //     for (var i = 0; i < students.length; ++i)
-    //       PersonView(theStudent: students[i]),
-    //   ],
-    // );
   }
 }
 
