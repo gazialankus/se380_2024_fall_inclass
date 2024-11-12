@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:se380_wk1/layout_app.dart';
 
 class Person {
   Person(this.name);
@@ -24,7 +25,7 @@ void main() {
   Person? a;
 
   myF(a);
-  runApp(const MyApp());
+  runApp(const LayoutApp());
 }
 
 class MyApp extends StatelessWidget {
