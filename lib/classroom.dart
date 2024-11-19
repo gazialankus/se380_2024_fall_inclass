@@ -1,5 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:se380_wk1/student.dart';
 
@@ -78,8 +79,8 @@ class StudentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InheritedStudent(
-      student: student,
+    return InheritedStudentNotifier(
+      notifier: student,
       child: ListTile(
         title: StudentNameWidget(),
         subtitle: StudentAgeWidget(),
@@ -96,31 +97,27 @@ class StudentAgeChanger extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final maybeInheritedStudent = InheritedStudent.maybeOf(context);
+    final student = InheritedStudentNotifier.maybeOf(context);
 
-    if (maybeInheritedStudent != null) {
-      var student = maybeInheritedStudent.student;
-      return ValueListenableBuilder(
-        valueListenable: student,
-        builder: (context, value, child) => Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              onPressed: () {
-                print('will decrease age ${value.name} here');
-                student.value = value.copyWith(age: value.age - 1);
-              },
-              icon: Icon(Icons.exposure_minus_1),
-            ),
-            IconButton(
-              onPressed: () {
-                print('will increase age of ${value.name} here');
-                student.value = value.copyWith(age: value.age + 1);
-              },
-              icon: Icon(Icons.plus_one),
-            ),
-          ],
-        ),
+    if (student != null) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            onPressed: () {
+              print('will decrease age ${student.name} here');
+              InheritedStudentNotifier.maybeNotifier(context)?.value = student.copyWith(age: student.age - 1);
+            },
+            icon: Icon(Icons.exposure_minus_1),
+          ),
+          IconButton(
+            onPressed: () {
+              print('will increase age of ${student.name} here');
+              InheritedStudentNotifier.maybeNotifier(context)?.value = student.copyWith(age: student.age + 1);
+            },
+            icon: Icon(Icons.plus_one),
+          ),
+        ],
       );
     }
     return SizedBox.shrink();
@@ -136,15 +133,12 @@ class StudentAgeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final maybeInheritedStudent = InheritedStudent.maybeOf(context);
+    final student = InheritedStudentNotifier.maybeOf(context);
 
-    if (maybeInheritedStudent != null) {
-      return ValueListenableBuilder(
-        valueListenable: maybeInheritedStudent.student,
-        builder: (context, value, child) => Text(
-          'Age: ${value.age}',
-          textScaler: TextScaler.linear(1.5),
-        ),
+    if (student != null) {
+      return Text(
+        'Age: ${student.age}',
+        textScaler: TextScaler.linear(1.5),
       );
     }
     return SizedBox.shrink();
@@ -158,37 +152,56 @@ class StudentNameWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final maybeInheritedStudent = InheritedStudent.maybeOf(context);
+    final student = InheritedStudentNotifier.maybeOf(context);
 
-    if (maybeInheritedStudent != null) {
-      return ValueListenableBuilder(
-        valueListenable: maybeInheritedStudent.student,
-        builder: (context, value, child) => Text(
-          value.name,
-          textScaler: TextScaler.linear(2),
-        ),
+    if (student != null) {
+      return Text(
+        student.name,
+        textScaler: TextScaler.linear(2),
       );
     }
     return SizedBox.shrink();
   }
 }
 
-class InheritedStudent extends InheritedWidget {
-  const InheritedStudent({
+// class InheritedStudent extends InheritedWidget {
+//   const InheritedStudent({
+//     super.key,
+//     required super.child,
+//     required this.student,
+//   });
+//
+//   final ValueNotifier<Student> student;
+//
+//   static InheritedStudent? maybeOf(BuildContext context) {
+//     return context.dependOnInheritedWidgetOfExactType<InheritedStudent>();
+//   }
+//
+//   @override
+//   bool updateShouldNotify(InheritedStudent old) {
+//     return student.value.name != old.student.value.name ||
+//         student.value.age != old.student.value.age;
+//   }
+// }
+
+class InheritedStudentNotifier extends InheritedNotifier<ValueListenable<Student>> {
+  const InheritedStudentNotifier({
     super.key,
-    required Widget child,
-    required this.student,
-  }) : super(child: child);
+    super.notifier,
+    required super.child,
+  });
 
-  final ValueNotifier<Student> student;
-
-  static InheritedStudent? maybeOf(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<InheritedStudent>();
+  static Student? maybeOf(BuildContext context) {
+    final inheritedStudentNotifier = context.dependOnInheritedWidgetOfExactType<InheritedStudentNotifier>();
+    return inheritedStudentNotifier?.notifier?.value;
   }
-
-  @override
-  bool updateShouldNotify(InheritedStudent old) {
-    return student.value.name != old.student.value.name ||
-        student.value.age != old.student.value.age;
+  static ValueNotifier<Student>? maybeNotifier(BuildContext context) {
+    final inheritedStudentNotifier = context.dependOnInheritedWidgetOfExactType<InheritedStudentNotifier>();
+    final l = inheritedStudentNotifier?.notifier;
+    if (l is ValueNotifier<Student>) {
+      return l;
+    } else {
+      return null;
+    }
   }
 }
