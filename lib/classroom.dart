@@ -27,14 +27,14 @@ class ClassroomPage extends StatefulWidget {
 }
 
 class _ClassroomPageState extends State<ClassroomPage> {
-  final students = <Student>[];
+  final students = <ValueNotifier<Student>>[];
 
   @override
   void initState() {
     super.initState();
     students.addAll([
-      Student('Ali Yilmaz', 19),
-      Student('Veli Kaya', 20),
+      ValueNotifier(Student('Ali Yilmaz', 19)),
+      ValueNotifier(Student('Veli Kaya', 20)),
     ]);
   }
 
@@ -47,9 +47,19 @@ class _ClassroomPageState extends State<ClassroomPage> {
             for (final student in students)
               StudentWidget(
                 student: student,
-                onStudentChanged: () {
-                  setState(() {});
-                }
+              ),
+            Spacer(),
+            ValueListenableBuilder(valueListenable: students[0], builder: (context, value0, child) {
+              return ValueListenableBuilder(valueListenable: students[1], builder: (context, value1, child) {
+                final elder = value0.age > value1.age ? value0: value1;
+                return Text('Elder is ${elder.name}', textScaler: TextScaler.linear(2),);
+              },);
+            },),
+            Text('Oldest is '),
+            Spacer(),
+            for (final student in students)
+              StudentWidget(
+                student: student,
               ),
           ],
         ),
@@ -61,46 +71,124 @@ class _ClassroomPageState extends State<ClassroomPage> {
 class StudentWidget extends StatelessWidget {
   const StudentWidget({
     super.key,
-    required this.student, required this.onStudentChanged,
+    required this.student,
   });
 
-  final Student student;
-  final void Function() onStudentChanged;
+  final ValueNotifier<Student> student;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(
-        student.name,
-        textScaler: TextScaler.linear(2),
-      ),
-      subtitle: Text(
-        'Age: ${student.age}',
-        textScaler: TextScaler.linear(1.5),
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            onPressed: () {
-              print('will decrease age ${student.name} here');
-              student.age -= 1;
-              onStudentChanged();
-            },
-            icon: Icon(Icons.exposure_minus_1),
-          ),
-          IconButton(
-            onPressed: () {
-              print('will increase age of ${student.name} here');
-              student.age += 1;
-              onStudentChanged();
-            },
-            icon: Icon(Icons.plus_one),
-          ),
-        ],
+    return InheritedStudent(
+      student: student,
+      child: ListTile(
+        title: StudentNameWidget(),
+        subtitle: StudentAgeWidget(),
+        trailing: StudentAgeChanger(),
       ),
     );
   }
 }
 
+class StudentAgeChanger extends StatelessWidget {
+  const StudentAgeChanger({
+    super.key,
+  });
 
+  @override
+  Widget build(BuildContext context) {
+    final maybeInheritedStudent = InheritedStudent.maybeOf(context);
+
+    if (maybeInheritedStudent != null) {
+      var student = maybeInheritedStudent.student;
+      return ValueListenableBuilder(
+        valueListenable: student,
+        builder: (context, value, child) => Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              onPressed: () {
+                print('will decrease age ${value.name} here');
+                student.value = value.copyWith(age: value.age - 1);
+              },
+              icon: Icon(Icons.exposure_minus_1),
+            ),
+            IconButton(
+              onPressed: () {
+                print('will increase age of ${value.name} here');
+                student.value = value.copyWith(age: value.age + 1);
+              },
+              icon: Icon(Icons.plus_one),
+            ),
+          ],
+        ),
+      );
+    }
+    return SizedBox.shrink();
+
+
+  }
+}
+
+class StudentAgeWidget extends StatelessWidget {
+  const StudentAgeWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final maybeInheritedStudent = InheritedStudent.maybeOf(context);
+
+    if (maybeInheritedStudent != null) {
+      return ValueListenableBuilder(
+        valueListenable: maybeInheritedStudent.student,
+        builder: (context, value, child) => Text(
+          'Age: ${value.age}',
+          textScaler: TextScaler.linear(1.5),
+        ),
+      );
+    }
+    return SizedBox.shrink();
+  }
+}
+
+class StudentNameWidget extends StatelessWidget {
+  const StudentNameWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final maybeInheritedStudent = InheritedStudent.maybeOf(context);
+
+    if (maybeInheritedStudent != null) {
+      return ValueListenableBuilder(
+        valueListenable: maybeInheritedStudent.student,
+        builder: (context, value, child) => Text(
+          value.name,
+          textScaler: TextScaler.linear(2),
+        ),
+      );
+    }
+    return SizedBox.shrink();
+  }
+}
+
+class InheritedStudent extends InheritedWidget {
+  const InheritedStudent({
+    super.key,
+    required Widget child,
+    required this.student,
+  }) : super(child: child);
+
+  final ValueNotifier<Student> student;
+
+  static InheritedStudent? maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<InheritedStudent>();
+  }
+
+  @override
+  bool updateShouldNotify(InheritedStudent old) {
+    return student.value.name != old.student.value.name ||
+        student.value.age != old.student.value.age;
+  }
+}
