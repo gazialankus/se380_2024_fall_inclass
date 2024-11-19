@@ -45,6 +45,7 @@ class _ClassroomPageState extends State<ClassroomPage> {
       body: SafeArea(
         child: Column(
           children: [
+            StudentNameWidget(),
             for (final student in students)
               StudentWidget(
                 student: student,
@@ -82,11 +83,22 @@ class StudentWidget extends StatelessWidget {
     return InheritedStudentNotifier(
       notifier: student,
       child: ListTile(
-        title: StudentNameWidget(),
+        title: StudentNameArea(),
         subtitle: StudentAgeWidget(),
         trailing: StudentAgeChanger(),
       ),
     );
+  }
+}
+
+class StudentNameArea extends StatelessWidget {
+  const StudentNameArea({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return StudentNameWidget();
   }
 }
 
@@ -164,25 +176,25 @@ class StudentNameWidget extends StatelessWidget {
   }
 }
 
-// class InheritedStudent extends InheritedWidget {
-//   const InheritedStudent({
-//     super.key,
-//     required super.child,
-//     required this.student,
-//   });
-//
-//   final ValueNotifier<Student> student;
-//
-//   static InheritedStudent? maybeOf(BuildContext context) {
-//     return context.dependOnInheritedWidgetOfExactType<InheritedStudent>();
-//   }
-//
-//   @override
-//   bool updateShouldNotify(InheritedStudent old) {
-//     return student.value.name != old.student.value.name ||
-//         student.value.age != old.student.value.age;
-//   }
-// }
+class InheritedStudent extends InheritedWidget {
+  const InheritedStudent({
+    super.key,
+    required super.child,
+    required this.student,
+  });
+
+  final ValueNotifier<Student> student;
+
+  static InheritedStudent? maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<InheritedStudent>();
+  }
+
+  @override
+  bool updateShouldNotify(InheritedStudent old) {
+    return student.value.name != old.student.value.name ||
+        student.value.age != old.student.value.age;
+  }
+}
 
 class InheritedStudentNotifier extends InheritedNotifier<ValueListenable<Student>> {
   const InheritedStudentNotifier({
