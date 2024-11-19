@@ -14,3 +14,32 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+# After midterm
+
+7 weeks left
+
+## Plan for Nov 19 
+
+widgets that maintain their state 
+    checkbox
+    textformfield
+
+state
+    inheritedwidget
+    valuenotifier
+    changenotifier
+    inheritednotifier
+    listenablebuilder
+
+## Topics for the rest of the semester
+
+async 
+
+network/firebase 
+
+wk
+
+wk
+
+presentation
